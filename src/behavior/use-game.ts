@@ -62,15 +62,31 @@ export function useGame(opts: Options) {
 
       const neighbors = [nw, n, ne, w, e, sw, s, se].filter(n => n?.alive).length
 
+      const neighborColors = [nw, n, ne, w, e, sw, s, se]
+        .filter(n => n?.alive)
+        .map(n => n!.color)
+      
+      const colorCounts = neighborColors.reduce((acc, color) => {
+        acc[color] = (acc[color] || 0) + 1
+        return acc
+      }, {} as Record<string, number>)
+
+      const mostCommonColor = Object.entries(colorCounts)
+        .sort(([,a], [,b]) => b - a)[0]?.[0] || shuffle(colors)[0]
+  
       if (cell.alive) {
+        const leastCommonColor = Object.entries(colorCounts)
+          .sort(([,a], [,b]) => a - b)[0]?.[0] || shuffle(colors)[0]
+
         return {
           alive: neighbors === 2 || neighbors === 3,
-          color: cell.color,
+          color: neighbors > 3 ? mostCommonColor : cell.color,
         }
       } else {
+
         return {
           alive: neighbors === 3,
-          color: shuffle(colors)[0],
+          color: mostCommonColor
         }
       }
     })

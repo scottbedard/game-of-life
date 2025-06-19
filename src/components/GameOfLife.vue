@@ -8,6 +8,7 @@
 </template>
 
 <script lang="ts" setup>
+import { colors } from '../behavior/use-game'
 import { computed, onMounted, useTemplateRef } from 'vue'
 import { useMouseInElement, useRafFn, useMousePressed } from '@vueuse/core'
 import type { Cell } from '../behavior/use-game'
@@ -52,26 +53,29 @@ useRafFn(() => {
   const _width = cellWidth.value
   const _height = cellHeight.value
 
-  // set fill style once
-  ctx.fillStyle = 'oklch(54.6% 0.245 262.881)'
-  
-  // build a single path for all alive cells
-  ctx.beginPath()
-  
-  for (let i = 0; i < props.game.length; i++) {
-    const cell = props.game[i]
-    const row = Math.floor(i / props.cols)
-    const col = i % props.cols
+  // draw each cell with it's color
+  colors.forEach(color => {
+    ctx.fillStyle = color
 
-    if (cell.alive) {
-      const x = col * _width
-      const y = row * _height
-      ctx.rect(x, y, _width, _height)
-    }
-  }
-  
-  // fill all cells
-  ctx.fill()
+    // build a single path for all alive cells
+    ctx.beginPath()
+
+    props.game
+      .filter(cell => cell.alive && cell.color === color)
+      .map(cell => {
+        const i = props.game.indexOf(cell)
+        const row = Math.floor(i / props.cols)
+        const col = i % props.cols
+
+        if (cell.alive) {
+          const x = col * _width
+          const y = row * _height
+          ctx.rect(x, y, _width, _height)
+        }
+      })
+
+    ctx.fill()
+  })
 
   // fill hover cell
   if (hoverCell.value !== -1) {

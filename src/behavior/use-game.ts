@@ -1,13 +1,21 @@
 import { ref } from "vue";
+import { shuffle } from 'lodash-es'
 
 export interface Cell {
   alive: boolean
+  color: string
 }
 
 interface Options {
   cols: number
   rows: number
 }
+
+export const colors = [
+  'oklch(79.2% 0.209 151.711)',
+  'oklch(62.3% 0.214 259.815)',
+  'oklch(85.2% 0.199 91.936)',
+]
 
 export function useGame(opts: Options) {
   const cols = ref(opts.cols)
@@ -20,6 +28,7 @@ export function useGame(opts: Options) {
     game.value = Array.from({ length: rows.value * cols.value }, () => {
       return {
         alive: false,
+        color: colors[0],
       }
     })
   }
@@ -28,6 +37,7 @@ export function useGame(opts: Options) {
     game.value = Array.from({ length: rows.value * cols.value }, () => {
       return {
         alive: Math.random() > seed,
+        color: shuffle(colors)[0],
       }
     })
 
@@ -54,10 +64,12 @@ export function useGame(opts: Options) {
       if (cell.alive) {
         return {
           alive: neighbors === 2 || neighbors === 3,
+          color: cell.color,
         }
       } else {
         return {
           alive: neighbors === 3,
+          color: cell.color,
         }
       }
     })

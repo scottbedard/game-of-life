@@ -14,10 +14,12 @@ export function useGame(opts: Options) {
   const rows = ref(opts.rows)
   const game = ref<Cell[]>([])
 
+  const seed = .5
+
   const refresh = () => {
     game.value = Array.from({ length: rows.value * cols.value }, () => {
       return {
-        alive: Math.random() > .99,
+        alive: Math.random() > seed,
       }
     })
   }
@@ -26,20 +28,27 @@ export function useGame(opts: Options) {
     const next = game.value.map((cell, i) => {
       const row = Math.floor(i / cols.value)
       const col = (i % cols.value) - 1
+      
+      // directional neighbors
+      const nw = row > 0 && col > 0 ? game.value[i - cols.value - 1] : undefined
+      const n = row > 0 ? game.value[i - cols.value] : undefined
+      const ne = row > 0 && col < cols.value - 1 ? game.value[i - cols.value + 1] : undefined
+      const w = col > 0 ? game.value[i - 1] : undefined
+      const e = col < cols.value - 1 ? game.value[i + 1] : undefined
+      const sw = row < rows.value - 1 && col > 0 ? game.value[i + cols.value - 1] : undefined
+      const s = row < rows.value - 1 ? game.value[i + cols.value] : undefined
+      const se = row < rows.value - 1 && col < cols.value - 1 ? game.value[i + cols.value + 1] : undefined
 
-      const neighbors = {
-        // top: row ? game.value[i - cols.value] : undefined,
-        // topRight: row && col < cols.value - 1 ? game.value[i - cols.value + 1] : undefined,
-        // right: col < cols.value - 1 ? game.value[i + 1] : undefined,
-        // bottomRight: row < rows.value - 1 && col < cols.value - 1 ? game.value[i + cols.value + 1] : undefined,
-        // bottom: row < rows.value - 1 ? game.value[i + cols.value] : undefined,
-        // bottomLeft: row < rows.value - 1 && col ? game.value[i + cols.value - 1] : undefined,
-        // left: col ? game.value[i - 1] : undefined,
-        // topLeft: row && col ? game.value[i - cols.value - 1] : undefined,
-      }
+      const neighbors = [nw, n, ne, w, e, sw, s, se].filter(n => n?.alive).length
 
-      return {
-        alive: Math.random() > .99
+      if (cell.alive) {
+        return {
+          alive: neighbors === 2 || neighbors === 3,
+        }
+      } else {
+        return {
+          alive: neighbors === 3,
+        }
       }
     })
 

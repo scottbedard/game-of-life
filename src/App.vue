@@ -35,13 +35,13 @@ const {
   rows,
   tick,
 } = useGame({
-  cols: 30,
-  rows: 30,
+  cols: 100,
+  rows: 100,
 })
 
 refresh()
 
 const { pause, resume, isActive } = useIntervalFn(() => {
   tick()
-}, 1000)
+}, 100)
 </script>

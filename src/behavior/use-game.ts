@@ -15,6 +15,7 @@ export const colors = [
   'oklch(79.2% 0.209 151.711)',
   'oklch(62.3% 0.214 259.815)',
   'oklch(85.2% 0.199 91.936)',
+  'oklch(74% 0.238 322.16)',
 ]
 
 export function useGame(opts: Options) {
@@ -69,7 +70,7 @@ export function useGame(opts: Options) {
       } else {
         return {
           alive: neighbors === 3,
-          color: cell.color,
+          color: shuffle(colors)[0],
         }
       }
     })

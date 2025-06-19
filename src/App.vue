@@ -36,19 +36,34 @@
       </Button>
     </div>
 
+    <div class="flex gap-6 justify-center mb-6">
+      <button
+        v-for="color in colors"
+        class="cursor-pointer font-bold size-8 rounded-full shadow-md text-white outline-offset-3"
+        :style="{
+          background: color,
+          outline: selectedColor === color ? `3px solid ${color}` : 'none',
+        }"
+        @click="selectedColor = color">
+        +
+      </button>
+    </div>
+
     <div
       class="aspect-square bg-gray-50 border border-gray-300 max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg">
       <GameOfLife
         :cols
         :game
         :rows
+        :selected-color
       />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useGame } from './behavior/use-game'
+import { colors, useGame } from './behavior/use-game'
+import { ref } from 'vue'
 import { useIntervalFn } from '@vueuse/core'
 import Button from './components/Button.vue'
 import GameOfLife from './components/GameOfLife.vue'
@@ -66,6 +81,8 @@ const {
 })
 
 randomize()
+
+const selectedColor = ref(colors[0])
 
 const { pause, resume, isActive } = useIntervalFn(tick, 100, { immediate: false })
 </script>

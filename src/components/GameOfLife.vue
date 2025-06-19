@@ -17,6 +17,7 @@ const props = defineProps<{
   cols: number
   game: Cell[]
   rows: number
+  selectedColor: string
 }>()
 
 let ctx: CanvasRenderingContext2D
@@ -79,7 +80,7 @@ useRafFn(() => {
 
   // fill hover cell
   if (hoverCell.value !== -1) {
-    ctx.fillStyle = `oklch(63.7% 0.237 25.331)`
+    ctx.fillStyle = props.selectedColor
     ctx.fillRect(
       hoverCell.value % props.cols * _width,
       Math.floor(hoverCell.value / props.cols) * _height,
@@ -90,6 +91,7 @@ useRafFn(() => {
   if (pressed.value && !isOutside.value) {
     const cell = props.game[hoverCell.value]
     cell.alive = true
+    cell.color = props.selectedColor
   }
 })
 </script>

@@ -80,10 +80,15 @@ export function useGame(opts: Options) {
 
         return {
           alive: neighbors === 2 || neighbors === 3,
-          color: neighbors > 3 ? mostCommonColor : cell.color,
+          color: neighbors === 2
+            ? leastCommonColor
+            : neighbors === 3
+              ? shuffle(neighborColors)[0]
+              : neighbors >= 4
+                ? mostCommonColor
+                : cell.color,
         }
       } else {
-
         return {
           alive: neighbors === 3,
           color: mostCommonColor

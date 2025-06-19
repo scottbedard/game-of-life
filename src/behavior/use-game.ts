@@ -24,26 +24,6 @@ export function useGame(opts: Options) {
   const cols = ref(opts.cols)
   const rows = ref(opts.rows)
   const game = ref<Cell[]>([])
-  
-  if (opts.query) {
-    try {
-      game.value = decompressFromBase64(opts.query).split('').map(x => {
-        if (x === '-') {
-          return {
-            alive: false,
-            color: colors[0],
-          }
-        }
-
-        return {
-          alive: true,
-          color: colors[parseInt(x)],
-        }
-      })
-    } catch (e) {
-      console.error(e)
-    }
-  }
 
   const clear = () => {
     game.value = Array.from({ length: rows.value * cols.value }, () => {
@@ -115,6 +95,28 @@ export function useGame(opts: Options) {
         }
       }
     })
+  }
+  
+  if (opts.query) {
+    try {
+      game.value = decompressFromBase64(opts.query).split('').map(x => {
+        if (x === '-') {
+          return {
+            alive: false,
+            color: colors[0],
+          }
+        }
+
+        return {
+          alive: true,
+          color: colors[parseInt(x)],
+        }
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  } else {
+    randomize()
   }
 
   return {

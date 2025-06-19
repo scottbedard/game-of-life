@@ -14,14 +14,24 @@ export function useGame(opts: Options) {
   const rows = ref(opts.rows)
   const game = ref<Cell[]>([])
 
-  const seed = .5
+  const seed = .8
 
-  const refresh = () => {
+  const clear = () => {
+    game.value = Array.from({ length: rows.value * cols.value }, () => {
+      return {
+        alive: false,
+      }
+    })
+  }
+
+  const randomize = () => {
     game.value = Array.from({ length: rows.value * cols.value }, () => {
       return {
         alive: Math.random() > seed,
       }
     })
+
+    tick()
   }
 
   const tick = () => {
@@ -54,9 +64,10 @@ export function useGame(opts: Options) {
   }
 
   return {
+    clear,
     cols,
     game,
-    refresh,
+    randomize,
     rows,
     tick,
   }

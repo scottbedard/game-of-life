@@ -4,8 +4,23 @@
       Karina's Game of Life
     </h1>
 
-    <div class="flex gap-4 fixed bottom-0 left-0 p-4">
+    <div class="flex gap-4 justify-center mb-6">
       <Button
+        class="flex items-center gap-2"
+        @click="clear">
+        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Clear
+      </Button>
+
+      <Button
+        class="flex items-center gap-2"
+        @click="randomize">
+        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22"/><path d="M2 6h1.972a4 4 0 0 1 3.6 2.2"/><path d="M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45"/></svg>
+        Randomize
+      </Button>
+    
+      <Button
+        v-if="isActive"
         class="flex items-center gap-2"
         @click="pause">
         <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg>
@@ -13,19 +28,16 @@
       </Button>
 
       <Button
+        v-else
         class="flex items-center gap-2"
         @click="resume">
         <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
         Resume
       </Button>
-
-      <Button @click="tick">
-        Tick
-      </Button>
     </div>
 
     <div
-      class="aspect-square bg-gray-50 max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg">
+      class="aspect-square bg-gray-50 border border-gray-300 max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg">
       <GameOfLife
         :cols
         :game
@@ -42,9 +54,10 @@ import Button from './components/Button.vue'
 import GameOfLife from './components/GameOfLife.vue'
 
 const { 
+  clear,
   cols,
   game,
-  refresh,
+  randomize,
   rows,
   tick,
 } = useGame({
@@ -52,7 +65,7 @@ const {
   rows: 80,
 })
 
-refresh()
+randomize()
 
-const { pause, resume } = useIntervalFn(tick, 100)
+const { pause, resume, isActive } = useIntervalFn(tick, 100, { immediate: false })
 </script>

@@ -59,4 +59,6 @@ function render() {
 }
 
 watch(() => props.game, render)
+
+onMounted(() => setTimeout(render, 10))
 </script>

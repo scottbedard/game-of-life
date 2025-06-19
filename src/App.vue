@@ -4,7 +4,7 @@
       Karina's Game of Life
     </h1>
 
-    <div class="flex gap-4 justify-center mb-6">
+    <div class="flex flex-wrap gap-4 justify-center mb-6">
       <Button
         class="flex items-center gap-2"
         @click="clear">
@@ -61,8 +61,8 @@ const {
   rows,
   tick,
 } = useGame({
-  cols: 80,
-  rows: 80,
+  cols: 50,
+  rows: 50,
 })
 
 randomize()

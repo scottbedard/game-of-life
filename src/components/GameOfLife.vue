@@ -5,13 +5,11 @@
     :height="elementHeight"
     :width="elementWidth"
   />
-
-  <pre class="fixed bottom-0 left-0 p-4">{{ { elementX, elementY } }}</pre>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, useTemplateRef, watch } from 'vue'
-import { useMouseInElement, useRafFn } from '@vueuse/core'
+import { computed, onMounted, useTemplateRef } from 'vue'
+import { useMouseInElement, useRafFn, useMousePressed } from '@vueuse/core'
 import type { Cell } from '../behavior/use-game'
 
 const props = defineProps<{
@@ -28,7 +26,9 @@ onMounted(() => {
 
 const canvasEl = useTemplateRef('canvasEl')
 
-const { elementX, elementY, elementWidth, elementHeight } = useMouseInElement(canvasEl)
+const { elementX, elementY, elementWidth, elementHeight, isOutside } = useMouseInElement(canvasEl)
+
+const { pressed } = useMousePressed()
 
 const cellWidth = computed(() => elementWidth.value / props.cols)
 
@@ -75,12 +75,17 @@ useRafFn(() => {
 
   // fill hover cell
   if (hoverCell.value !== -1) {
-    ctx.fillStyle = `red`
+    ctx.fillStyle = `oklch(63.7% 0.237 25.331)`
     ctx.fillRect(
       hoverCell.value % props.cols * _width,
       Math.floor(hoverCell.value / props.cols) * _height,
       _width,
       _height)
+  }
+
+  if (pressed.value && !isOutside.value) {
+    const cell = props.game[hoverCell.value]
+    cell.alive = true
   }
 })
 </script>

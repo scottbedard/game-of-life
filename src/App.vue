@@ -39,13 +39,13 @@
     <div class="flex gap-6 justify-center mb-6">
       <button
         v-for="color in colors"
-        class="cursor-pointer font-bold size-8 rounded-full shadow-md text-white outline-offset-3"
+        class="cursor-pointer font-bold size-10 rounded-full shadow-md text-white text-sm outline-offset-3"
         :style="{
           background: color,
           outline: selectedColor === color ? `3px solid ${color}` : 'none',
         }"
         @click="selectedColor = color">
-        +
+        {{ game.filter(cell => cell.alive && cell.color === color).length }}
       </button>
     </div>
 

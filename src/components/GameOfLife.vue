@@ -90,8 +90,11 @@ useRafFn(() => {
 
   if (pressed.value && !isOutside.value) {
     const cell = props.game[hoverCell.value]
-    cell.alive = true
-    cell.color = props.selectedColor
+
+    if (cell) {
+      cell.alive = true
+      cell.color = props.selectedColor
+    }
   }
 })
 </script>

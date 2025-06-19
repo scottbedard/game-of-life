@@ -1,13 +1,13 @@
 <template>
   <div class="p-4">
     <h1 class="my-6 text-center text-4xl">
-      Karina's Game of Life
+      Karina's Color Battle!
     </h1>
 
     <div class="flex flex-wrap gap-4 justify-center mb-6">
       <Button
         class="flex items-center gap-2"
-        @click="clear">
+        @click="onClear">
         <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         Clear
       </Button>
@@ -85,4 +85,9 @@ randomize()
 const selectedColor = ref(colors[0])
 
 const { pause, resume, isActive } = useIntervalFn(tick, 100, { immediate: false })
+
+function onClear() {
+  pause()
+  clear()
+}
 </script>

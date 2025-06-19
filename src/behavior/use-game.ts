@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { shuffle } from 'lodash-es'
+import { decompressFromBase64} from 'lz-string'
 
 export interface Cell {
   alive: boolean
@@ -9,6 +10,7 @@ export interface Cell {
 interface Options {
   cols: number
   rows: number
+  query: string | null
 }
 
 export const colors = [
@@ -22,8 +24,26 @@ export function useGame(opts: Options) {
   const cols = ref(opts.cols)
   const rows = ref(opts.rows)
   const game = ref<Cell[]>([])
+  
+  if (opts.query) {
+    try {
+      game.value = decompressFromBase64(opts.query).split('').map(x => {
+        if (x === '-') {
+          return {
+            alive: false,
+            color: colors[0],
+          }
+        }
 
-  const seed = .8
+        return {
+          alive: true,
+          color: colors[parseInt(x)],
+        }
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const clear = () => {
     game.value = Array.from({ length: rows.value * cols.value }, () => {
@@ -37,7 +57,7 @@ export function useGame(opts: Options) {
   const randomize = () => {
     game.value = Array.from({ length: rows.value * cols.value }, () => {
       return {
-        alive: Math.random() > seed,
+        alive: Math.random() > .8,
         color: shuffle(colors)[0],
       }
     })

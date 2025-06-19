@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, useTemplateRef } from 'vue'
+import { computed, onMounted, useTemplateRef, watch } from 'vue'
 import { useRafFn, useElementSize } from '@vueuse/core'
 import type { Cell } from '../behavior/use-game'
 
@@ -24,26 +24,42 @@ const { height, width } = useElementSize(canvasEl)
 const cellWidth = computed(() => width.value / props.cols)
 const cellHeight = computed(() => height.value / props.rows)
 
-useRafFn(() => {
-  const ctx = canvasEl.value?.getContext('2d')
+let ctx: CanvasRenderingContext2D
 
-  if (!ctx) {
-    return
-  }
+onMounted(() => {
+  ctx = canvasEl.value?.getContext('2d')!
+})
 
+function clear(index: number) {
+  const row = Math.floor(index / props.cols)
+  const col = index % props.cols
+  
+  ctx.clearRect(col * cellWidth.value, row * cellHeight.value, cellWidth.value, cellHeight.value)
+}
+
+function fill(index: number) {
+  const row = Math.floor(index / props.cols)
+  const col = index % props.cols
+  
+  ctx.fillStyle = 'oklch(54.6% 0.245 262.881)'
+  ctx.fillRect(col * cellWidth.value, row * cellHeight.value, cellWidth.value, cellHeight.value)
+}
+
+watch(() => props.game, (current, prev) => {
   const _width = cellWidth.value
   const _height = cellHeight.value
 
-  ctx.clearRect(0, 0, width.value, height.value)
+  ctx.fillStyle = 'oklch(54.6% 0.245 262.881)'
 
   for (let i = 0; i < props.game.length; i++) {
-    const cell = props.game[i]
+    const cell = current[i]
     const row = Math.floor(i / props.cols)
     const col = i % props.cols
 
     if (cell.alive) {
-      ctx.fillStyle = 'oklch(54.6% 0.245 262.881)'
       ctx.fillRect(col * _width, row * _height, _width, _height)
+    } else {
+      ctx.clearRect(col * _width, row * _height, _width, _height)
     }
   }
 })

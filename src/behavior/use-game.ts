@@ -25,7 +25,7 @@ export function useGame(opts: Options) {
   }
 
   const tick = () => {
-    const next = game.value.map((cell, i) => {
+    game.value = game.value.map((cell, i) => {
       const row = Math.floor(i / cols.value)
       const col = (i % cols.value) - 1
       
@@ -51,8 +51,6 @@ export function useGame(opts: Options) {
         }
       }
     })
-
-    game.value.splice(0, game.value.length, ...next)
   }
 
   return {

@@ -35,8 +35,8 @@ const {
   rows,
   tick,
 } = useGame({
-  cols: 100,
-  rows: 100,
+  cols: 200,
+  rows: 200,
 })
 
 refresh()

@@ -1,6 +1,6 @@
 <template>
   <canvas
-    class="h-full w-full"
+    class="h-full w-full touch-none"
     ref="canvasEl"
     :height="elementHeight"
     :width="elementWidth"
